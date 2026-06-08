@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>US Market Fundamentals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;600&family=Lora:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles/dashboard.css" />
+</head>
+<body>
+  <div id="app">
+
+    <header class="dash-header">
+      <div>
+        <h1 class="dash-title">US Market Fundamentals</h1>
+        <p class="dash-sub">fed policy · inflation · labor · equities</p>
+      </div>
+      <div class="header-right">
+        <span class="status-badge" id="status-badge">sample data</span>
+        <span class="last-updated" id="last-updated">not yet loaded</span>
+      </div>
+    </header>
+
+    <div class="api-bar">
+      <label for="fred-key">FRED key →</label>
+      <input type="password" id="fred-key" placeholder="get a free key at fred.stlouisfed.org, or set VITE_FRED_API_KEY in .env" />
+      <button id="load-btn">fetch live data</button>
+    </div>
+
+    <div class="error-bar" id="error-bar"></div>
+
+    <section>
+      <div class="section-label">macro · federal reserve &amp; labor</div>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">fed funds rate</div>
+          <div class="metric-value" id="ffr-val">—</div>
+          <div class="metric-delta" id="ffr-delta">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">cpi yoy inflation</div>
+          <div class="metric-value" id="cpi-val">—</div>
+          <div class="metric-delta" id="cpi-delta">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">unemployment rate</div>
+          <div class="metric-value" id="unemp-val">—</div>
+          <div class="metric-delta" id="unemp-delta">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">10y treasury yield</div>
+          <div class="metric-value" id="t10y-val">—</div>
+          <div class="metric-delta" id="t10y-delta">nominal yield</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-label">equity · s&amp;p 500 &amp; volatility</div>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">s&amp;p 500</div>
+          <div class="metric-value" id="sp-val">—</div>
+          <div class="metric-delta" id="sp-delta">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">vix — fear gauge</div>
+          <div class="metric-value" id="vix-val">—</div>
+          <div class="metric-delta" id="vix-delta">—</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">real rate (10y − cpi)</div>
+          <div class="metric-value" id="real-val">—</div>
+          <div class="metric-delta delta-flat">derived</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">vix regime</div>
+          <div class="metric-value regime-value" id="regime-val">—</div>
+          <div class="metric-delta" id="regime-sub">—</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chart-row">
+      <div class="chart-card">
+        <div class="chart-card-title">Fed Funds Rate</div>
+        <div class="chart-card-sub">FRED · FEDFUNDS · 24mo</div>
+        <div class="legend-row">
+          <span class="legend-item"><span class="legend-swatch" style="background:#185FA5;"></span>ffr %</span>
+        </div>
+        <div class="chart-wrap"><canvas id="ffr-chart" role="img" aria-label="Fed Funds Rate over 24 months"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-title">CPI Inflation</div>
+        <div class="chart-card-sub">FRED · CPIAUCSL · YoY% · 24mo</div>
+        <div class="legend-row">
+          <span class="legend-item"><span class="legend-swatch" style="background:#993C1D;"></span>cpi yoy %</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#96938d; border: 1px dashed #5a5855;"></span>2% target</span>
+        </div>
+        <div class="chart-wrap"><canvas id="cpi-chart" role="img" aria-label="CPI inflation over 24 months"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-title">Unemployment Rate</div>
+        <div class="chart-card-sub">FRED · UNRATE · 24mo</div>
+        <div class="legend-row">
+          <span class="legend-item"><span class="legend-swatch" style="background:#0F6E56;"></span>unemp %</span>
+        </div>
+        <div class="chart-wrap"><canvas id="unemp-chart" role="img" aria-label="Unemployment rate over 24 months"></canvas></div>
+      </div>
+    </section>
+
+    <footer class="dash-footer">
+      <div class="footer-left">
+        built by <a href="https://www.linkedin.com/in/pragya-chaturvedi" target="_blank" rel="noopener">Pragya Chaturvedi</a>
+        &nbsp;·&nbsp; data via <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a> &amp; Yahoo Finance
+        &nbsp;·&nbsp; v1 — macro + equity layer
+      </div>
+      <div class="footer-right">
+        <span class="footer-mode" id="data-mode-label">sample data</span>
+        <button id="refresh-btn">↺ refresh</button>
+      </div>
+    </footer>
+
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
